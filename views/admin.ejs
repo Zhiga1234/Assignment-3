@@ -1,225 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
+
 <head>
-    <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    
+    <meta charset="UTF-8">
+    <title>Админ-панель</title>
     <style>
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0,0.4);
-    }
+        /* Простые стили для улучшения визуализации */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 80%;
-    }
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
 
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
 
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    header, footer {
-        background-color: #007bff;
-        color: white;
-    }
-    footer {
-        position: fixed;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: auto; 
-        padding: 10px 0; 
-        background-color: #007bff;
-        color: white;
-        text-align: center;
-    }
-    .footer-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+        form {
+            margin: 0;
+        }
     </style>
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">WeatherApp</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav2" aria-controls="navbarNav2" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav2">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Main <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/about">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/searchlogs">History</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/admin">Admin Panel</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="/logout">Logout</a>
-                </li>
-            </ul>
-        </div>
-      </nav>
-    <h1>Admin Dashboard</h1>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Edit</th>
-                <th>Delete</th>
-            </tr>
-        </thead>
-
-        <button id="myBtn">Add New User</button>
-
-        <div id="myModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <form action="/admin/adduser" method="post">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username"><br><br>
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password"><br><br>
-                    <input type="submit" value="Create User">
-                    <button type="button" class="cancelBtn">Cancel</button>
-                </form>
-            </div>
-        </div>
-        <div id="deleteModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p>Are you sure you want to delete <span id="deleteUsername"></span>?</p>
-                <form id="deleteForm" action="" method="post">
-                    <input type="submit" value="Delete">
-                    <button type="button" class="cancelBtn">Cancel</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="editModal" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <form id="editForm" method="post">
-                    <input type="hidden" id="editUserId" name="userId">
-                    <label for="editUsername">Username:</label>
-                    <input type="text" id="editUsername" name="username"><br><br>
-                    <input type="submit" value="Update User">
-                    <button type="button" class="cancelBtn">Cancel</button>
-                </form>
-            </div>
-        </div>
-        <tbody>
-            <% users.forEach(user => { %>
+    <h1>Админ-панель</h1>
+    <section>
+        <h2>Добавить пользователя</h2>
+        <form action="/admin/users/add" method="post">
+            <label for="addName">Имя пользователя:</label>
+            <input type="text" id="addName" name="name" required>
+            <label for="addPassword">Пароль:</label>
+            <input type="password" id="addPassword" name="password" required>
+            <label for="isAdmin">Администратор:</label>
+            <input type="checkbox" id="isAdmin" name="isAdmin" value="true">
+            <button type="submit">Добавить</button>
+        </form>
+    </section>
+    <section>
+        <h2>Список пользователей</h2>
+        <table>
+            <thead>
                 <tr>
-                    <td><%= user.username %></td>
-                    <td><%= user.firstName %></td>
-                    <td><%= user.lastName %></td>
-                    <td>
-                        <button class="editBtn" data-userid="<%= user._id %>">Edit</button>
-                    </td>
-                    <td>
-                        <button class="deleteBtn" data-userid="<%= user._id %>">Delete</button>
-                    </td>
+                    <th>Имя пользователя</th>
+                    <th>Действия</th>
                 </tr>
-            <% }) %>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <% users.forEach(function(user) { %>
+                    <tr>
+                        <td>
+                            <%= user.name %>
+                        </td>
+                        <td>
+                            <!-- Форма для редактирования -->
+                            <form action="/admin/users/edit" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="<%= user._id %>">
+                                <input type="text" name="name" value="<%= user.name %>" required>
+                                <input type="password" name="password" placeholder="Новый пароль">
+                                <label for="isAdminEdit">Администратор:</label>
+                                <input type="checkbox" id="isAdminEdit" name="isAdmin" value="true" <% if (user.isAdmin)
+                                    { %> checked <% } %>>
+                                    <button type="submit">Обновить</button>
+                            </form>
+                            <!-- Форма для удаления -->
+                            <form action="/admin/users/delete/<%= user._id %>" method="post" style="display:inline;">
+                                <button type="submit">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+    </section>
 
-        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="infoModalLabel">Information</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        Here you can add additional information about the Weather, weather tips, contact information, or other relevant content.
-                    </div>
-                </div>
-            </div>
-        </div>
-    
- 
-
-
-    <script>
-    var modal = document.getElementById("myModal");
-    var btn = document.getElementById("myBtn");
-    var span = document.getElementsByClassName("close")[0];
-    var cancelBtn = document.getElementsByClassName("cancelBtn")[0];
-    btn.onclick = function() {
-        modal.style.display = "block";
-    }
-    span.onclick = function() {
-        modal.style.display = "none";
-    }
-    cancelBtn.onclick = function() {
-        modal.style.display = "none";
-    }
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.style.display = "none";
-        }
-    }
-    document.querySelectorAll('.deleteBtn').forEach(button => {
-        button.addEventListener('click', function() {
-        var userId = this.dataset.userid;
-        document.getElementById('deleteUsername').textContent = this.dataset.username;
-        document.getElementById('deleteForm').action = '/admin/deleteuser/' + userId;
-        document.getElementById('deleteModal').style.display = 'block';
-        });
-    });
-    document.querySelectorAll('.editBtn').forEach(button => {
-        button.addEventListener('click', function() {
-            var userId = this.dataset.userid;
-            document.getElementById('editForm').action = '/admin/edituser/' + userId;
-            document.getElementById('editModal').style.display = 'block';
-        });
-    });
-    document.querySelectorAll('.cancelBtn').forEach(button => {
-        button.addEventListener('click', function() {
-            this.closest('.modal').style.display = 'none';
-        });
-    });
-
-    </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </body>
+
 </html>

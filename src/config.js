@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+
 // Replace <password> with the password for the ZhigitaliBackend user. Make sure to URL encode any special characters.
 const uri = "mongodb+srv://ZhigitaliBackend:Software2202@zhigabackend.eyrfa6q.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
@@ -25,3 +26,7 @@ const Loginschema = new mongoose.Schema({
 const collection = new mongoose.model("login", Loginschema);
 
 module.exports = collection;
+
+
+
+

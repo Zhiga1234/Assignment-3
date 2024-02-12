@@ -1,6 +1,6 @@
 const express = require("express");
 const path = require("path");
-const collection = require("./config");
+const collection = require("./config.js");
 const bcrypt = require('bcrypt');
 const ObjectId = require('mongodb').ObjectId;
 const NewsAPI = require('newsapi');
@@ -8,7 +8,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 
 const app = express();
-const port = 3000;
+const port = 3030;
 
 const OPENWEATHERMAP_API_KEY = 'a2b8082a0ac50246506c542822439b02';
 const VISUAL_CROSSING_API_KEY = '55db72521367f3be568fa85cad349de0';
@@ -28,30 +28,48 @@ app.use(express.urlencoded({ extended: false }));
 app.set("view engine", "ejs");
 app.set('views', path.join(__dirname, '../views'));
 
+
+
+app.get("/home", (req, res) => {
+    res.render("home");
+});
 // Register User
 app.post("/signup", async (req, res) => {
-    const data = {
-        name: req.body.username,
-        password: req.body.password
-    }
+    const { username, password } = req.body;
 
-    // Check if the username already exists in the database
-    const existingUser = await collection.findOne({ name: data.name });
+    try {
+        // Check if the username already exists in the database
+        const existingUser = await collection.findOne({ name: username });
 
-    if (existingUser) {
-        res.send('User already exists. Please choose a different username.');
-    } else {
+        if (existingUser) {
+            return res.send('User already exists. Please choose a different username.');
+        }
+
         // Hash the password using bcrypt
         const saltRounds = 10; // Number of salt rounds for bcrypt
-        const hashedPassword = await bcrypt.hash(data.password, saltRounds);
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-        data.password = hashedPassword; // Replace the original password with the hashed one
+        // Create a new user document
+        const newUser = new collection({
+            name: username,
+            password: hashedPassword
+        });
 
-        const userdata = await collection.insertMany(data);
-        console.log(userdata);
+        // Save the new user to the database
+        await newUser.save();
+
+        // Redirect to the home page after successful signup
+        res.redirect('/home');
+    } catch (error) {
+        console.error("Error signing up:", error);
+        res.send("Error signing up");
     }
 });
 
+
+
+
+// Login user 
 // Login user 
 app.post("/login", async (req, res) => {
     try {
@@ -63,15 +81,18 @@ app.post("/login", async (req, res) => {
         const isPasswordMatch = await bcrypt.compare(req.body.password, check.password);
         if (!isPasswordMatch) {
             res.send("wrong Password");
+        } else {
+            if (check.isAdmin) {
+                res.redirect("/admin"); // Redirect to admin page if user is admin
+            } else {
+                res.render("home"); // Redirect to main page for non-admin users
+            }
         }
-        else {
-            res.render("home");
-        }
-    }
-    catch {
+    } catch {
         res.send("wrong Details");
     }
 });
+
 
 // Handle weather and news data
 app.post('/weather', async (req, res) => {
@@ -145,3 +166,115 @@ collection.updateOne({ _id: new ObjectId(userId) }, { $set: { isAdmin: true } })
     .catch(err => {
         console.error("Произошла ошибка при обновлении пользователя: ", err);
     });
+
+
+
+app.get("/admin", async (req, res) => {
+    const users = await collection.find(); 
+    res.render("admin", { users }); 
+});
+
+
+// Handle GET request for weather endpoint
+app.get("/weather", async (req, res) => {
+    const city = req.query.city || "Astana"; // Default to Astana if no city is provided
+
+    try {
+        const response = await axios.get(
+            `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPENWEATHERMAP_API_KEY}`
+        );
+
+        const weatherData = {
+            cityId: response.data.id,
+            city: response.data.name,
+            temperature: response.data.main.temp,
+            feelsLike: response.data.main.feels_like,
+            description: response.data.weather[0].description,
+            icon: response.data.weather[0].icon,
+            coordinates: response.data.coord,
+            humidity: response.data.main.humidity,
+            pressure: response.data.main.pressure,
+            windSpeed: response.data.wind.speed,
+            countryCode: response.data.sys.country,
+            rainVolume: response.data.rain ? response.data.rain['1h'] : 0, // Rain volume for the last 3 hours
+        };
+
+        const visualCrossingResponse = await axios.get(
+            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?key=${VISUAL_CROSSING_API_KEY}`
+        );
+
+        const forecastData = visualCrossingResponse.data;
+
+        const newsResponse = await newsapi.v2.topHeadlines({
+            q: city,
+            country: 'us',
+        });
+
+        const newsData = newsResponse.articles;
+
+        res.render('weather.ejs', { weatherData, forecastData, newsData, error: null });
+    } catch (error) {
+        console.error(error);
+        res.render('weather.ejs', { weatherData: null, forecastData: null, newsData: null, error: 'Error fetching data' });
+    }
+});
+
+
+// Маршрут для добавления пользователя
+app.post("/admin/users/add", async (req, res) => {
+    try {
+        const { name, password, isAdmin } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
+        // Create a new user document
+        const newUser = new collection({
+            name,
+            password: hashedPassword,
+            isAdmin: isAdmin === 'true' // Convert isAdmin to a boolean
+        });
+
+        // Save the new user to the database
+        await newUser.save();
+
+        res.redirect("/admin"); // Redirect back to the admin page after adding the user
+    } catch (error) {
+        console.error("Error adding user:", error);
+        res.send("Error adding user");
+    }
+});
+
+// Маршрут для редактирования пользователя
+app.post("/admin/users/edit", async (req, res) => {
+    try {
+        const { id, name, password, isAdmin } = req.body;
+        const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+
+        // Find the user by ID and update their information
+        await collection.findByIdAndUpdate(id, {
+            name,
+            password: hashedPassword,
+            isAdmin: isAdmin === 'true' // Convert isAdmin to a boolean
+        });
+
+        res.redirect("/admin"); // Redirect back to the admin page after editing the user
+    } catch (error) {
+        console.error("Error editing user:", error);
+        res.send("Error editing user");
+    }
+});
+
+// Маршрут для удаления пользователя
+app.post("/admin/users/delete/:userId", async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // Find the user by ID and delete them
+        await collection.findByIdAndDelete(userId);
+
+        res.redirect("/admin"); // Redirect back to the admin page after deleting the user
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.send("Error deleting user");
+    }
+});
+
