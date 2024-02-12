@@ -1,0 +1,187 @@
+/* Общие стили */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #2d2013;
+    color: #fff;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+/* Стили для поиска и кнопок */
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input[type="text"] {
+    width: 70%;
+    padding: 10px;
+    border: none;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+}
+
+.search-btn, .random-btn {
+    background-color: #e09850;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-btn:hover, .random-btn:hover {
+    background-color: #c27e3d;
+}
+
+.random-btn {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+/* Стили для результатов поиска */
+
+.meals {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+    margin-top: 20px;
+}
+
+.meal {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.meal img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+    transition: transform 0.3s ease;
+}
+
+.meal:hover img {
+    transform: scale(1.05);
+}
+
+.meal-info {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.meal:hover .meal-info {
+    opacity: 1;
+}
+
+/* Стили для отдельного блюда */
+
+.single-meal {
+    margin: 50px auto;
+    max-width: 600px;
+}
+
+.single-meal img {
+    width: 100%;
+    max-width: 400px;
+    margin: 15px auto;
+    display: block;
+    border-radius: 4px;
+}
+
+.single-meal-info {
+    border: 2px solid #e09850;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.single-meal p {
+    margin: 10px 0;
+}
+
+.single-meal ul {
+    padding: 0;
+    list-style: none;
+}
+
+.single-meal ul li {
+    background-color: #e09850;
+    color: #fff;
+    border-radius: 20px;
+    display: inline-block;
+    padding: 5px 15px;
+    margin: 5px;
+}
+
+/* Медиа-запросы */
+
+@media (max-width: 700px) {
+    .flex {
+        flex-direction: column;
+    }
+
+    input[type="text"], .search-btn, .random-btn {
+        width: 100%;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+}
+
+@media (max-width: 500px) {
+    .meals {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+
+
+/* Styles for the openweatherAPI button */
+.openweatherAPI-btn-container {
+    position: absolute;
+    top: 10px;
+    right: 10px; /* Moved to the right side */
+  }
+  
+  .openweatherAPI-btn {
+    padding: 15px 25px;
+    font-size: 16px;
+    color: white;
+    background: linear-gradient(to right, #6dd5ed, #2193b0); /* Gradient for the button */
+    border: none;
+    border-radius: 20px; /* Highly rounded corners for the button */
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .openweatherAPI-btn:hover {
+    box-shadow: 0 4px 15px rgba(33, 147, 176, 0.4); /* Shadow effect on hover */
+  }

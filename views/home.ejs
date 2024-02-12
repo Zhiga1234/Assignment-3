@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css">
+    <link rel="stylesheet" href="stylem.css">
+    <title>Meal Finder</title>
+</head>
+<body>
+    <div class="openweatherAPI-btn-container">
+        <a href="/views/weather.ejs" class="btn openweatherAPI-btn">
+            openweatherAPI
+        </a>
+    </div>
+
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-12">
+                <h1 class="text-center text-white">Meal Finder</h1>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <form class="form-inline justify-content-center" id="submit">
+                    <input type="text" class="form-control mb-2 mr-sm-2" id="search" placeholder="Search for meals or keywords">
+                    <button class="btn btn-warning mb-2" id="search-btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="btn btn-secondary mb-2 ml-2" id="random">
+                        <i class="fas fa-random"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div id="result-heading"></div>
+        <div id="meals" class="meals"></div>
+        <div id="single-meal"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

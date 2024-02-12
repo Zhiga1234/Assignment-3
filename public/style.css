@@ -1,0 +1,80 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.form-container {
+  width: 350px; /* Увеличение размера контейнера */
+  margin: 0 auto;
+  padding: 30px; /* Увеличение отступов */
+  border-radius: 10px; /* Более закругленные углы */
+  background: linear-gradient(to bottom right, #FF9A8B, #FF6F61); /* Градиентный фон */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Добавление тени */
+}
+
+.form-group {
+  margin-bottom: 20px; /* Увеличение отступа между группами элементов */
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 10px; /* Увеличение отступа между меткой и полем ввода */
+  color: #fff; /* Изменение цвета текста метки */
+}
+
+.form-group input {
+  width: 100%;
+  padding: 12px; /* Увеличение отступов вокруг текста в полях ввода */
+  font-size: 18px; /* Увеличение размера шрифта */
+  border: none;
+  border-radius: 8px; /* Более закругленные углы */
+  background-color: rgba(255, 255, 255, 0.8); /* Прозрачный фон */
+}
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  background-color: #ff4d40;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #ff6f61;
+}
+
+p {
+  margin-top: 20px; /* Увеличение отступа между абзацами */
+  text-align: center;
+  color: #fff;
+}
+
+.link {
+  color: #fff;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
