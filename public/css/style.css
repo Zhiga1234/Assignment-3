@@ -1,0 +1,126 @@
+:root {
+    --text-color: rgb(214, 214, 214);
+}
+
+* {
+    margin: 2px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    padding: 33px;
+    margin: 23vh 5px 0 5px;
+    width: auto;
+    color: var(--text-color);
+    background-color: #111111ec;
+}
+
+.search-container {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.search-input {
+    border: none;
+    width: 280px;
+    height: 27px;
+    border-radius: 25px;
+    padding: 5px 20px;
+    background: #7c7c7c2c;
+    color: var(--text-color);
+    font-size: 15px;
+}
+
+.search-input:focus {
+    outline: none;
+}
+
+button {
+    border: none;
+    font-size: 16px;
+    margin: 0.5em;
+    border-radius: 50%;
+    height: 38px;
+    width: 38px;
+    outline: none;
+    background: #7c7c7c2c;
+    color: var(--text-color);
+}
+
+button:hover {
+    background: #7c7c7c6c;
+}
+
+.desc {
+    text-transform: capitalize;
+    margin-left: 10px;
+    font-size: 15px;
+}
+
+.desc-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.forecast-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.forecast-item {
+    background-color: #333;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px;
+    width: calc(20% - 10px);
+    text-align: center;
+}
+
+.forecast-day {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.forecast-temp {
+    font-size: 16px;
+    margin-top: 5px;
+}
+
+.forecast-icon {
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+}
+
+.location-button {
+    border: none;
+    font-size: 16px;
+    margin: 0.5em;
+    border-radius: 50%;
+    height: 38px;
+    width: 38px;
+    outline: none;
+    background: #7c7c7c2c;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+.location-button:hover {
+    background: #7c7c7c6c;
+}

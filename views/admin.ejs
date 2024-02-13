@@ -4,82 +4,78 @@
 <head>
     <meta charset="UTF-8">
     <title>Админ-панель</title>
-    <style>
-        /* Простые стили для улучшения визуализации */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table,
-        th,
-        td {
-            border: 1px solid black;
-        }
-
-        th,
-        td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        form {
-            margin: 0;
-        }
-    </style>
+    <!-- Подключение Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 
 <body>
-    <h1>Админ-панель</h1>
-    <section>
-        <h2>Добавить пользователя</h2>
-        <form action="/admin/users/add" method="post">
-            <label for="addName">Имя пользователя:</label>
-            <input type="text" id="addName" name="name" required>
-            <label for="addPassword">Пароль:</label>
-            <input type="password" id="addPassword" name="password" required>
-            <label for="isAdmin">Администратор:</label>
-            <input type="checkbox" id="isAdmin" name="isAdmin" value="true">
-            <button type="submit">Добавить</button>
-        </form>
-    </section>
-    <section>
-        <h2>Список пользователей</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Имя пользователя</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% users.forEach(function(user) { %>
+    <div class="container mt-5">
+        <h1>Админ-панель</h1>
+        <section>
+            <h2>Добавить пользователя</h2>
+            <form action="/admin/users/add" method="post" class="form-inline">
+                <div class="form-group mb-2">
+                    <label for="addName" class="sr-only">Имя пользователя:</label>
+                    <input type="text" class="form-control" id="addName" name="name" placeholder="Имя пользователя" required>
+                </div>
+                <div class="form-group mx-sm-3 mb-2">
+                    <label for="addPassword" class="sr-only">Пароль:</label>
+                    <input type="password" class="form-control" id="addPassword" name="password" placeholder="Пароль" required>
+                </div>
+                <div class="form-group mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="isAdmin" name="isAdmin" value="true">
+                        <label class="form-check-label" for="isAdmin">
+                            Администратор
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mb-2">Добавить</button>
+            </form>
+        </section>
+        <section>
+            <h2>Список пользователей</h2>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            <%= user.name %>
-                        </td>
-                        <td>
-                            <!-- Форма для редактирования -->
-                            <form action="/admin/users/edit" method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="<%= user._id %>">
-                                <input type="text" name="name" value="<%= user.name %>" required>
-                                <input type="password" name="password" placeholder="Новый пароль">
-                                <label for="isAdminEdit">Администратор:</label>
-                                <input type="checkbox" id="isAdminEdit" name="isAdmin" value="true" <% if (user.isAdmin)
-                                    { %> checked <% } %>>
-                                    <button type="submit">Обновить</button>
-                            </form>
-                            <!-- Форма для удаления -->
-                            <form action="/admin/users/delete/<%= user._id %>" method="post" style="display:inline;">
-                                <button type="submit">Удалить</button>
-                            </form>
-                        </td>
+                        <th>Имя пользователя</th>
+                        <th>Действия</th>
                     </tr>
-                    <% }); %>
-            </tbody>
-        </table>
-    </section>
+                </thead>
+                <tbody>
+                    <% users.forEach(function(user) { %>
+                        <tr>
+                            <td>
+                                <%= user.name %>
+                            </td>
+                            <td>
+                                <!-- Форма для редактирования -->
+                                <form action="/admin/users/edit" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="<%= user._id %>">
+                                    <input type="text" class="form-control" name="name" value="<%= user.name %>" required>
+                                    <input type="password" class="form-control" name="password" placeholder="Новый пароль">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="checkbox" id="isAdminEdit" name="isAdmin" value="true" <% if (user.isAdmin) { %> checked <% } %>>
+                                        <label class="form-check-label" for="isAdminEdit">Администратор</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Обновить</button>
+                                </form>
+                                <!-- Форма для удаления -->
+                                <form action="/admin/users/delete/<%= user._id %>" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-danger">Удалить</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
+        </section>
+    </div>
 
+    <!-- Подключение Bootstrap JS и зависимостей -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

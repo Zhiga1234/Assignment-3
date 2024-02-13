@@ -175,49 +175,7 @@ app.get("/admin", async (req, res) => {
 });
 
 
-// Handle GET request for weather endpoint
-app.get("/weather", async (req, res) => {
-    const city = req.query.city || "Astana"; // Default to Astana if no city is provided
 
-    try {
-        const response = await axios.get(
-            `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${OPENWEATHERMAP_API_KEY}`
-        );
-
-        const weatherData = {
-            cityId: response.data.id,
-            city: response.data.name,
-            temperature: response.data.main.temp,
-            feelsLike: response.data.main.feels_like,
-            description: response.data.weather[0].description,
-            icon: response.data.weather[0].icon,
-            coordinates: response.data.coord,
-            humidity: response.data.main.humidity,
-            pressure: response.data.main.pressure,
-            windSpeed: response.data.wind.speed,
-            countryCode: response.data.sys.country,
-            rainVolume: response.data.rain ? response.data.rain['1h'] : 0, // Rain volume for the last 3 hours
-        };
-
-        const visualCrossingResponse = await axios.get(
-            `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${city}?key=${VISUAL_CROSSING_API_KEY}`
-        );
-
-        const forecastData = visualCrossingResponse.data;
-
-        const newsResponse = await newsapi.v2.topHeadlines({
-            q: city,
-            country: 'us',
-        });
-
-        const newsData = newsResponse.articles;
-
-        res.render('weather.ejs', { weatherData, forecastData, newsData, error: null });
-    } catch (error) {
-        console.error(error);
-        res.render('weather.ejs', { weatherData: null, forecastData: null, newsData: null, error: 'Error fetching data' });
-    }
-});
 
 
 // Маршрут для добавления пользователя
